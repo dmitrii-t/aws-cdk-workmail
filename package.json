@@ -7,6 +7,7 @@
     "aws-cdk-workmail-resource-provider": "bin/aws-cdk-workmail-resource-provider.js"
   },
   "scripts": {
+    "bundle": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig.webpack.json\" webpack -p",
     "build": "tsc",
     "watch": "tsc -w",
     "cdk": "cdk"
@@ -14,18 +15,27 @@
   "devDependencies": {
     "@aws-cdk/assert": "^1.13.1",
     "@types/node": "^13.11.0",
+    "@types/webpack": "^4.41.10",
     "chai": "^4.2.0",
+    "cross-env": "^7.0.2",
+    "env-cmd": "^10.1.0",
+    "glob": "^7.1.6",
     "mocha": "^7.1.1",
+    "ts-loader": "^6.2.2",
     "ts-node": "^8.8.2",
     "tslib": "^1.11.1",
     "tslint": "^6.1.1",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-entry-plus": "^1.0.18"
   },
   "dependencies": {
     "@aws-cdk/aws-cloudformation": "^1.13.1",
     "@aws-cdk/aws-lambda": "^1.13.1",
     "@aws-cdk/core": "^1.13.1",
     "@types/cfn-response": "^1.0.3",
+    "aws-sdk": "^2.656.0",
     "cfn-response": "^1.0.1",
     "source-map-support": "^0.5.9"
   }

@@ -1,14 +1,15 @@
 import cdk = require('@aws-cdk/core');
-import {WorkMailResource} from '../src/workmail';
+import {WorkmailGroup} from '../src/workmail/group';
 
 /**
  * A stack that sets up MyCustomResource and shows how to get an attribute from it
  */
-class MyStack extends cdk.Stack {
+class SampleStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const resource = new WorkMailResource(this, 'DemoResource', {
+
+    const resource = new WorkmailGroup(this, 'WorkmailGroup', {
       message: 'CustomResource says hello',
     });
 
@@ -21,5 +22,5 @@ class MyStack extends cdk.Stack {
 }
 
 const app = new cdk.App();
-new MyStack(app, 'CustomResourceDemoStack');
+new SampleStack(app, 'WorkmailSampleStack');
 app.synth();

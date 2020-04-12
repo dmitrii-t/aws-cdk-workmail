@@ -2,27 +2,25 @@ import * as cfn from '@aws-cdk/aws-cloudformation';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as cdk from '@aws-cdk/core';
 
-import * as fs from 'fs';
-
-export interface WorkMailResourceProps {
+export interface WorkmailGroupProps {
     /**
      * Message to echo
      */
     message: string;
 }
 
-export class WorkMailResource extends cdk.Construct {
+export class WorkmailGroup extends cdk.Construct {
     public readonly response: string;
 
-    constructor(scope: cdk.Construct, id: string, props: WorkMailResourceProps) {
+    constructor(scope: cdk.Construct, id: string, props: WorkmailGroupProps) {
         super(scope, id);
 
         const resource = new cfn.CustomResource(this, 'Resource', {
-            provider: cfn.CustomResourceProvider.lambda(new lambda.SingletonFunction(this, 'WorkMail', {
-                uuid: '2653afeb-4faf-47c5-b024-a514fae699c0',
-                code: new lambda.InlineCode(fs.readFileSync('src/workmail/provider/index.js', {encoding: 'utf-8'})),
+            provider: cfn.CustomResourceProvider.lambda(new lambda.SingletonFunction(this, 'WorkMailGroup', {
+                uuid: 'c17c1e58-22d8-4d1f-a456-7469a7ab73fe',
+                code: new lambda.AssetCode('src/workmail/group/provider'),
                 handler: 'index.main',
-                timeout: cdk.Duration.seconds(300),
+                timeout: cdk.Duration.seconds(10),
                 runtime: lambda.Runtime.NODEJS_12_X,
             })),
             properties: props

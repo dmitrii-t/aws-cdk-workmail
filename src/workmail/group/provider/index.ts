@@ -1,61 +1,26 @@
-import * as cfnresponse from '../../../aws/cfn-response';
+import {handleWithProvider, Provider} from '../../../aws/custom-resource';
 
-async function create(props: any): Promise<any> {
-    const {Message} = props;
-    console.info(`Received message ${Message}`);
-    return {'Response': `Received message ${Message}`}
+interface Props {
+    Message: string
 }
 
-async function update(props: any): Promise<any> {
-    return Promise.resolve({})
+interface Resp {
+
 }
 
-async function destroy(props: any): Promise<any> {
-    return Promise.resolve({})
+class WorkmailProvider implements Provider<Props, Resp> {
+    create = async (props: Props): Promise<Resp> => {
+        const {Message} = props;
+        return Promise.resolve({'Response': `Received message ${Message}`} as Resp);
+    };
+
+    destroy = async (props: Props): Promise<Resp> => {
+        return Promise.resolve({} as Resp);
+    };
+
+    update = async (props: Props): Promise<Resp> => {
+        return Promise.resolve({} as Resp);
+    };
 }
 
-
-const requestTypeHandlers: { [key: string]: Function } = {
-    'Create': create,
-    'Update': update,
-    'Delete': destroy
-};
-
-async function handle(event: any, context: any): Promise<any> {
-    const {RequestType, ResourceProperties} = event;
-    const {FailCreate, FailUpdate, FailDelete} = ResourceProperties;
-
-    if (FailCreate || FailUpdate || FailDelete) {
-        const error = `Failed to process event ${JSON.stringify(event)}`;
-        return Promise.reject(error)
-
-    } else {
-        const handler = requestTypeHandlers[RequestType] || (async () => Promise.reject(`Unknown RequestType ${RequestType}`));
-        return await handler(ResourceProperties);
-    }
-}
-
-async function failIn(timeoutInMillis: number): Promise<void> {
-    return new Promise(((resolve, reject) => {
-        let wait = setTimeout(() => {
-            clearTimeout(wait);
-            reject(`Fail to create resource in ${timeoutInMillis}`);
-        }, timeoutInMillis)
-    }));
-}
-
-export async function main(event: any, context: any) {
-    console.info(`Received event ${JSON.stringify(event)}`);
-
-    try {
-        const responseData = await Promise.race([handle(event, context), failIn(7000)]);
-        await cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData || {})
-
-    } catch (error) {
-        await cfnresponse.send(event, context, cfnresponse.FAILED, {'Error': error});
-
-    } finally {
-        context.done()
-    }
-}
-
+export const main = handleWithProvider(new WorkmailProvider(), 7000);

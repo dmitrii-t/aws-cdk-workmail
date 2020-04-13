@@ -1,4 +1,4 @@
-import * as cfnresponse from 'cfn-response';
+import * as cfnresponse from '../../../aws/cfn-response';
 
 async function create(props: any): Promise<any> {
     const {Message} = props;
@@ -48,11 +48,14 @@ export async function main(event: any, context: any) {
     console.info(`Received event ${JSON.stringify(event)}`);
 
     try {
-        const customData = await Promise.race([handle(event, context), failIn(7000)]);
-        await cfnresponse.send(event, context, cfnresponse.SUCCESS, customData || {})
+        const responseData = await Promise.race([handle(event, context), failIn(7000)]);
+        await cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData || {})
 
     } catch (error) {
         await cfnresponse.send(event, context, cfnresponse.FAILED, {'Error': error});
+
+    } finally {
+        context.done()
     }
 }
 

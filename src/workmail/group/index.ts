@@ -1,6 +1,7 @@
 import * as cfn from '@aws-cdk/aws-cloudformation';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as cdk from '@aws-cdk/core';
+import * as cr from '@aws-cdk/custom-resources';
 
 export interface WorkmailGroupProps {
     /**

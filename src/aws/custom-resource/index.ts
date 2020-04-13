@@ -36,13 +36,14 @@ export function handleWithProvider<P, R>(provider: Provider<P, R>, timeoutInMill
     };
 
     return async (event: any, context: any) => {
-        console.info(`Received event ${JSON.stringify(event)}`);
+        console.debug(`Received event ${JSON.stringify(event)}`);
 
         try {
             const responseData = await Promise.race([handle(event, context), rejectByTimeout()]);
             await cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData || {})
 
         } catch (error) {
+            console.error(`Failed to process event. ${error}`);
             await cfnresponse.send(event, context, cfnresponse.FAILED, {'Error': error});
 
         } finally {
